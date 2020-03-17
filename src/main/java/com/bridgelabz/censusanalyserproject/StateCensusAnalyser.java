@@ -15,8 +15,10 @@ public class StateCensusAnalyser {
     //METHOD TO LOAD THE CSV FILE AND GET
     public int loadIndiaCensusData(String csvFilePath) throws MyCensusException {
         int recordCount=0;
-        if (getFileExtension(csvFilePath) != ".csv")
+        String extension = getFileExtension(csvFilePath);
+        if (!extension.equals(".csv"))
             throw new MyCensusException(MyCensusException.MyException_Type.NO_SUCH_TYPE,"No such a type");
+
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath)))
         {
             CsvToBean<IndiaCensusCSV> csvToBean = new CsvToBeanBuilder(reader)
@@ -25,6 +27,7 @@ public class StateCensusAnalyser {
                     .build();
              Iterator<IndiaCensusCSV> censusCSVIterator = csvToBean.iterator();
              while (censusCSVIterator.hasNext()) {
+
                  System.out.print(recordCount+++"  ");
                  IndiaCensusCSV censusCSV = censusCSVIterator.next();
                  System.out.print("state: "+censusCSV.getState()+", ");
@@ -33,14 +36,16 @@ public class StateCensusAnalyser {
                  System.out.print("density: "+censusCSV.getDensityPerSqKm()+", ");
                  System.out.println();
              }
-         } catch (NoSuchFileException e) {
+         } catch (RuntimeException e) {
+            throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER,"File not found");
+        }catch (NoSuchFileException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.FILE_NOT_FOUND,"File not found");
         } catch (IOException e) {
-        e.printStackTrace();
+            e.printStackTrace();
     }
         return recordCount;
     }
-
+    //METHOD TO GET EXTENSION OF CSV FILE
     private static String getFileExtension(String file) {
         String extension = "";
         try {
