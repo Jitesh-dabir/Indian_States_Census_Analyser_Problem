@@ -1,17 +1,19 @@
 package com.bridgelabz.censusanalyserproject;
 
+import com.bridgelabz.exception.MyCensusException;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.Iterator;
 
 public class StateCensusAnalyser {
 
     //METHOD TO LOAD THE CSV FILE AND GET
-    public int loadIndiaCensusData(String csvFilePath)  {
+    public int loadIndiaCensusData(String csvFilePath) throws MyCensusException {
         int recordCount=0;
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath)))
         {
@@ -23,13 +25,15 @@ public class StateCensusAnalyser {
              while (censusCSVIterator.hasNext()) {
                  System.out.print(recordCount+++"  ");
                  IndiaCensusCSV censusCSV = censusCSVIterator.next();
-                 System.out.print("state:"+censusCSV.getState()+", ");
-                 System.out.print("population"+censusCSV.getPopulation()+", ");
-                 System.out.print("area"+censusCSV.getAreaInSqKm()+", ");
-                 System.out.print("density"+censusCSV.getDensityPerSqKm()+", ");
+                 System.out.print("state: "+censusCSV.getState()+", ");
+                 System.out.print("population: "+censusCSV.getPopulation()+", ");
+                 System.out.print("area: "+censusCSV.getAreaInSqKm()+", ");
+                 System.out.print("density: "+censusCSV.getDensityPerSqKm()+", ");
                  System.out.println();
              }
-         } catch (IOException e) {
+         } catch (NoSuchFileException e) {
+            throw new MyCensusException(MyCensusException.MyException_Type.FILE_NOT_FOUND,"No such file");
+        } catch (IOException e) {
         e.printStackTrace();
     }
         return recordCount;

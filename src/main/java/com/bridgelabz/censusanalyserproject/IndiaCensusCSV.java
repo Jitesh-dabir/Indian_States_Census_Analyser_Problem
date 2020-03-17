@@ -58,7 +58,5 @@ public class IndiaCensusCSV {
                 " ,AreaInSqKm='" + areaInSqKm + '\'' +
                 " ,DensityPerSqKm='" + densityPerSqKm + '\'' +
                 '}';
-
         }
     }
-
