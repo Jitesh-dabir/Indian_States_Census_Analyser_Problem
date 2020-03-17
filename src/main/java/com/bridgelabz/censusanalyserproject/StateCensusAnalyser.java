@@ -15,6 +15,8 @@ public class StateCensusAnalyser {
     //METHOD TO LOAD THE CSV FILE AND GET
     public int loadIndiaCensusData(String csvFilePath) throws MyCensusException {
         int recordCount=0;
+        if (getFileExtension(csvFilePath) != ".csv")
+            throw new MyCensusException(MyCensusException.MyException_Type.NO_SUCH_TYPE,"No such a type");
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath)))
         {
             CsvToBean<IndiaCensusCSV> csvToBean = new CsvToBeanBuilder(reader)
@@ -32,11 +34,23 @@ public class StateCensusAnalyser {
                  System.out.println();
              }
          } catch (NoSuchFileException e) {
-            throw new MyCensusException(MyCensusException.MyException_Type.FILE_NOT_FOUND,"No such file");
+            throw new MyCensusException(MyCensusException.MyException_Type.FILE_NOT_FOUND,"File not found");
         } catch (IOException e) {
         e.printStackTrace();
     }
         return recordCount;
+    }
+
+    private static String getFileExtension(String file) {
+        String extension = "";
+        try {
+            if (file != null) {
+                extension = file.substring(file.lastIndexOf("."));
+            }
+        } catch (Exception e) {
+            extension = "";
+        }
+        return extension;
     }
 
     public static void main(String[] args)  {
