@@ -8,7 +8,8 @@ public class CensusAnalyserProblemTest {
 
     //CONSTANT
     private static final String STATE_CENSUS_DATA_PATH = "./src/test/resources/StateCensusData.csv";
-    private static final String WRONG_STATE_CENSUS_DATA_PATH = "./src/test/resources/StateCensusData.cs";
+    private static final String WRONG_STATE_CENSUS_DATA_PATH = "./src/test/resources/StateCensus.csv";
+    private static final String WRONG_TYPE_STATE_CENSUS_DATA_PATH = "./src/test/resources/StateCensusData.cs";
 
     //OBJECT CREATION
     StateCensusAnalyser censusAnalyserProblem = new StateCensusAnalyser();
@@ -20,7 +21,7 @@ public class CensusAnalyserProblemTest {
     }
 
     @Test
-    public void givenIndianCensusCsvFile_WhenImproper_ShouldReturnCorrectRecord() throws MyCensusException {
+    public void givenIndianCensusCsvFile_WhenImproper_ShouldThrowException() throws MyCensusException {
      try {
          int numberOfRecord = censusAnalyserProblem.loadIndiaCensusData(WRONG_STATE_CENSUS_DATA_PATH);
          Assert.assertEquals(29,numberOfRecord);
