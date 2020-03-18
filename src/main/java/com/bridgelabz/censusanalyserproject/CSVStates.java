@@ -42,7 +42,9 @@ public class CSVStates {
                 System.out.print("StateCode: "+censusCSV.getStateCode()+", ");
                 System.out.println();
             }
-        } catch (NoSuchFileException e) {
+        } catch (RuntimeException e) {
+            throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,"No such delimiter and header");
+        }catch (NoSuchFileException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.FILE_NOT_FOUND,"File not found");
         } catch (IOException e) {
             e.printStackTrace();

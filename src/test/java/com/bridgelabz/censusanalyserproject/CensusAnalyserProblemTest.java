@@ -91,4 +91,14 @@ public class CensusAnalyserProblemTest {
             Assert.assertEquals(MyCensusException.MyException_Type.NO_SUCH_TYPE, e.type);
         }
     }
+
+    @Test
+    public void givenIndianStateCodeCsvFile_WhenImproperDelimiter_ShouldThrowException() throws MyCensusException {
+        try {
+            int numberOfRecord = censusAnalyserProblem.loadIndiaCensusData(WRONG_DELIMITER_STATE_CENSUS_DATA_PATH);
+            Assert.assertEquals(37, numberOfRecord);
+        } catch (MyCensusException e) {
+            Assert.assertEquals(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER, e.type);
+        }
+    }
 }
