@@ -3,6 +3,8 @@ package com.bridgelabz.censusanalyserproject;
 import com.bridgelabz.exception.MyCensusException;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -31,7 +33,9 @@ public class CSVStates {
                 System.out.print("StateCode: "+censusCSV.getStateCode()+", ");
                 System.out.println();
             }
-        }  catch (IOException e) {
+        } catch (FileNotFoundException e) {
+            throw new MyCensusException(MyCensusException.MyException_Type.FILE_NOT_FOUND,"File not found");
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return recordCount;
