@@ -37,7 +37,7 @@ public class StateCensusAnalyser {
                  System.out.println();
              }
          } catch (RuntimeException e) {
-            throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER,"File not found");
+            throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,"Delimiter or header not found");
         }catch (NoSuchFileException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.FILE_NOT_FOUND,"File not found");
         } catch (IOException e) {
@@ -62,6 +62,3 @@ public class StateCensusAnalyser {
         System.out.println("Welcome to Indian States Census Analyser Problem");
     }
 }
-
-
-

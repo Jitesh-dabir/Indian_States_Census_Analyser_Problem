@@ -4,7 +4,7 @@ public class MyCensusException  extends Exception{
 
         // REPRESENT A FIXED SET OF CONSTANTS
         public enum MyException_Type {
-            FILE_NOT_FOUND,NO_SUCH_TYPE,WRONG_DELIMITER;
+            FILE_NOT_FOUND,NO_SUCH_TYPE,WRONG_DELIMITER_OR_HEADER;
         }
         public MyException_Type type;
 
