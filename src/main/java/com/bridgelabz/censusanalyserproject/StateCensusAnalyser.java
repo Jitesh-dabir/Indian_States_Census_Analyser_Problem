@@ -30,14 +30,8 @@ public class StateCensusAnalyser {
                     .build();
              Iterator<IndiaCensusCSV> censusCSVIterator = csvToBean.iterator();
              while (censusCSVIterator.hasNext()) {
-
-                 System.out.print(recordCount+++"  ");
+                 recordCount++;
                  IndiaCensusCSV censusCSV = censusCSVIterator.next();
-                 System.out.print("state: "+censusCSV.getState()+", ");
-                 System.out.print("population: "+censusCSV.getPopulation()+", ");
-                 System.out.print("area: "+censusCSV.getAreaInSqKm()+", ");
-                 System.out.print("density: "+censusCSV.getDensityPerSqKm()+", ");
-                 System.out.println();
              }
          } catch (RuntimeException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,"Delimiter or header not found");
@@ -66,12 +60,6 @@ public class StateCensusAnalyser {
             while (statesCSVIterator.hasNext()) {
                 IndianStateCode censusCSV = statesCSVIterator.next();
                 ++recordCount;
-                System.out.print("SrNo: "+censusCSV.getSrNo()+", ");
-                System.out.print("state: "+censusCSV.getState()+", ");
-                System.out.print("Name: "+censusCSV.getName()+", ");
-                System.out.print("TIN: "+censusCSV.getTin()+", ");
-                System.out.print("StateCode: "+censusCSV.getStateCode()+", ");
-                System.out.println();
             }
         } catch (RuntimeException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,"No such delimiter and header");
