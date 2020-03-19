@@ -14,7 +14,7 @@ import java.util.stream.StreamSupport;
 
 public class StateCensusAnalyser {
 
-    //CONSTANT
+    //CONSTANT FOR REGEX PATTERN
     private static final String PATTERN_FOR_CSV_FILE = "^[a-zA-Z0-9./_@]*[.]+[c][s][v]$";
 
     //METHOD TO LOAD THE CSV FILE AND GET
@@ -26,9 +26,7 @@ public class StateCensusAnalyser {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath)))
         {
              Iterator<IndiaCensusCSV> censusCSVIterator = this.getCsvFileIterator(reader,IndiaCensusCSV.class);
-             Iterable<IndiaCensusCSV> iterable = () -> censusCSVIterator;
-             recordCount= (int) StreamSupport.stream(iterable.spliterator(),false).count();
-             return recordCount;
+            return this.getCount(censusCSVIterator);
          } catch (RuntimeException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,"Delimiter or header not found");
         } catch (NoSuchFileException e) {
@@ -49,9 +47,7 @@ public class StateCensusAnalyser {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath)))
         {
             Iterator<IndianStateCode> statesCSVIterator = this.getCsvFileIterator(reader,IndianStateCode.class);
-            Iterable<IndianStateCode> iterable = () -> statesCSVIterator;
-            recordCount= (int) StreamSupport.stream(iterable.spliterator(),false).count();
-            return recordCount;
+            return this.getCount(statesCSVIterator);
         } catch (RuntimeException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,"No such delimiter and header");
         }catch (NoSuchFileException e) {
@@ -84,6 +80,11 @@ public class StateCensusAnalyser {
         return csvToBean.iterator();
     }
 
+    private <E> int getCount(Iterator <E> iterator) {
+        Iterable<E> iterable = () -> iterator;
+        int recordCount= (int) StreamSupport.stream(iterable.spliterator(),false).count();
+        return recordCount;
+    }
     public static void main(String[] args)  {
         System.out.println("Welcome to Indian States Census Analyser Problem");
     }
