@@ -24,22 +24,18 @@ public class StateCensusAnalyser {
             throw new MyCensusException(MyCensusException.MyException_Type.NO_SUCH_TYPE,"No such a type");
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath)))
         {
-            CsvToBean<IndiaCensusCSV> csvToBean = new CsvToBeanBuilder(reader)
-                    .withType(IndiaCensusCSV.class)
-                    .withIgnoreLeadingWhiteSpace(true)
-                    .build();
-             Iterator<IndiaCensusCSV> censusCSVIterator = csvToBean.iterator();
+             Iterator<IndiaCensusCSV> censusCSVIterator = this.getCsvFileIterator(reader,IndiaCensusCSV.class);
              while (censusCSVIterator.hasNext()) {
                  recordCount++;
                  IndiaCensusCSV censusCSV = censusCSVIterator.next();
              }
          } catch (RuntimeException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,"Delimiter or header not found");
-        }catch (NoSuchFileException e) {
+        } catch (NoSuchFileException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.FILE_NOT_FOUND,"File not found");
         } catch (IOException e) {
             e.printStackTrace();
-    }
+        }
         return recordCount;
     }
 
@@ -52,11 +48,7 @@ public class StateCensusAnalyser {
             throw new MyCensusException(MyCensusException.MyException_Type.NO_SUCH_TYPE,"No such a type");
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath)))
         {
-            CsvToBean<IndianStateCode> csvToBean = new CsvToBeanBuilder(reader)
-                    .withType(IndianStateCode.class)
-                    .withIgnoreLeadingWhiteSpace(true)
-                    .build();
-            Iterator<IndianStateCode>statesCSVIterator = csvToBean.iterator();
+            Iterator<IndianStateCode>statesCSVIterator = this.getCsvFileIterator(reader,IndianStateCode.class);
             while (statesCSVIterator.hasNext()) {
                 IndianStateCode censusCSV = statesCSVIterator.next();
                 ++recordCount;
@@ -82,6 +74,15 @@ public class StateCensusAnalyser {
             extension = "";
         }
         return extension;
+    }
+
+    //METHOD TO GET CSV ITERATOR
+    private <E> Iterator<E> getCsvFileIterator(Reader reader,Class<E> csvClass) {
+        CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder(reader);
+        csvToBeanBuilder.withType(csvClass);
+        csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
+        CsvToBean<E> csvToBean = csvToBeanBuilder.build();
+        return csvToBean.iterator();
     }
 
     public static void main(String[] args)  {
