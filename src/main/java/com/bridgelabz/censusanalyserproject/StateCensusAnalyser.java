@@ -10,6 +10,7 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.regex.Pattern;
+import java.util.stream.StreamSupport;
 
 public class StateCensusAnalyser {
 
@@ -25,10 +26,9 @@ public class StateCensusAnalyser {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath)))
         {
              Iterator<IndiaCensusCSV> censusCSVIterator = this.getCsvFileIterator(reader,IndiaCensusCSV.class);
-             while (censusCSVIterator.hasNext()) {
-                 recordCount++;
-                 IndiaCensusCSV censusCSV = censusCSVIterator.next();
-             }
+             Iterable<IndiaCensusCSV> iterable = () -> censusCSVIterator;
+             recordCount= (int) StreamSupport.stream(iterable.spliterator(),false).count();
+             return recordCount;
          } catch (RuntimeException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,"Delimiter or header not found");
         } catch (NoSuchFileException e) {
@@ -48,11 +48,10 @@ public class StateCensusAnalyser {
             throw new MyCensusException(MyCensusException.MyException_Type.NO_SUCH_TYPE,"No such a type");
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath)))
         {
-            Iterator<IndianStateCode>statesCSVIterator = this.getCsvFileIterator(reader,IndianStateCode.class);
-            while (statesCSVIterator.hasNext()) {
-                IndianStateCode censusCSV = statesCSVIterator.next();
-                ++recordCount;
-            }
+            Iterator<IndianStateCode> statesCSVIterator = this.getCsvFileIterator(reader,IndianStateCode.class);
+            Iterable<IndianStateCode> iterable = () -> statesCSVIterator;
+            recordCount= (int) StreamSupport.stream(iterable.spliterator(),false).count();
+            return recordCount;
         } catch (RuntimeException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,"No such delimiter and header");
         }catch (NoSuchFileException e) {
@@ -76,7 +75,7 @@ public class StateCensusAnalyser {
         return extension;
     }
 
-    //METHOD TO GET CSV ITERATOR
+    //GENERIC METHOD TO GET CSV ITERATOR
     private <E> Iterator<E> getCsvFileIterator(Reader reader,Class<E> csvClass) {
         CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder(reader);
         csvToBeanBuilder.withType(csvClass);
