@@ -25,7 +25,7 @@ public class StateCensusAnalyser {
             throw new MyCensusException(MyCensusException.MyException_Type.NO_SUCH_TYPE,"No such a type");
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath)))
         {
-             Iterator<IndiaCensusCSV> censusCSVIterator = new CsvIterator().getCsvFileIterator(reader,IndiaCensusCSV.class);
+             Iterator<IndiaCensusCSV> censusCSVIterator = new CsvBuilder().getCSVFileIterator(reader,IndiaCensusCSV.class);
             return this.getCount(censusCSVIterator);
          } catch (RuntimeException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,"Delimiter or header not found");
@@ -46,7 +46,7 @@ public class StateCensusAnalyser {
             throw new MyCensusException(MyCensusException.MyException_Type.NO_SUCH_TYPE,"No such a type");
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath)))
         {
-            Iterator<IndianStateCode> statesCSVIterator = new CsvIterator().getCsvFileIterator(reader,IndianStateCode.class);
+            Iterator<IndianStateCode> statesCSVIterator = new CsvBuilder().getCSVFileIterator(reader,IndianStateCode.class);
             return this.getCount(statesCSVIterator);
         } catch (RuntimeException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,"No such delimiter and header");
