@@ -25,7 +25,7 @@ public class StateCensusAnalyser {
             throw new MyCensusException(MyCensusException.MyException_Type.NO_SUCH_TYPE,"No such a type");
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath)))
         {
-             Iterator<IndiaCensusCSV> censusCSVIterator = this.getCsvFileIterator(reader,IndiaCensusCSV.class);
+             Iterator<IndiaCensusCSV> censusCSVIterator = new CsvIterator().getCsvFileIterator(reader,IndiaCensusCSV.class);
             return this.getCount(censusCSVIterator);
          } catch (RuntimeException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,"Delimiter or header not found");
@@ -46,7 +46,7 @@ public class StateCensusAnalyser {
             throw new MyCensusException(MyCensusException.MyException_Type.NO_SUCH_TYPE,"No such a type");
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath)))
         {
-            Iterator<IndianStateCode> statesCSVIterator = this.getCsvFileIterator(reader,IndianStateCode.class);
+            Iterator<IndianStateCode> statesCSVIterator = new CsvIterator().getCsvFileIterator(reader,IndianStateCode.class);
             return this.getCount(statesCSVIterator);
         } catch (RuntimeException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,"No such delimiter and header");
@@ -71,20 +71,13 @@ public class StateCensusAnalyser {
         return extension;
     }
 
-    //GENERIC METHOD TO GET CSV ITERATOR
-    private <E> Iterator<E> getCsvFileIterator(Reader reader,Class<E> csvClass) {
-        CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder(reader);
-        csvToBeanBuilder.withType(csvClass);
-        csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
-        CsvToBean<E> csvToBean = csvToBeanBuilder.build();
-        return csvToBean.iterator();
-    }
-
+    //METHOD TO GET COUNT OF RECORDS
     private <E> int getCount(Iterator <E> iterator) {
         Iterable<E> iterable = () -> iterator;
         int recordCount= (int) StreamSupport.stream(iterable.spliterator(),false).count();
         return recordCount;
     }
+
     public static void main(String[] args)  {
         System.out.println("Welcome to Indian States Census Analyser Problem");
     }
