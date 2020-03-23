@@ -1,8 +1,7 @@
 package com.bridgelabz.censusanalyserproject;
 
+import com.bridgelabz.exception.CSVBuilderException;
 import com.bridgelabz.exception.MyCensusException;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -19,7 +18,6 @@ public class StateCensusAnalyser {
 
     //METHOD TO LOAD THE CSV FILE AND GET
     public int loadIndiaCensusData(String csvFilePath) throws MyCensusException {
-        int recordCount=0;
         String extension = getFileExtension(csvFilePath);
         if (!Pattern.matches(PATTERN_FOR_CSV_FILE,extension))
             throw new MyCensusException(MyCensusException.MyException_Type.NO_SUCH_TYPE,"No such a type");
@@ -33,14 +31,15 @@ public class StateCensusAnalyser {
             throw new MyCensusException(MyCensusException.MyException_Type.FILE_NOT_FOUND,"File not found");
         } catch (IOException e) {
             e.printStackTrace();
+        }  catch (CSVBuilderException e) {
+            e.printStackTrace();
         }
-        return recordCount;
+        return 0;
     }
 
     //METHOD TO LOAD THE CSV FILE AND GET
     public int loadIndianStateCodeData(String csvFilePath) throws MyCensusException {
         //LOCAL VARIABLE
-        int recordCount=0;
         String extension = getFileExtension(csvFilePath);
         if (!Pattern.matches(PATTERN_FOR_CSV_FILE,extension))
             throw new MyCensusException(MyCensusException.MyException_Type.NO_SUCH_TYPE,"No such a type");
@@ -54,8 +53,10 @@ public class StateCensusAnalyser {
             throw new MyCensusException(MyCensusException.MyException_Type.FILE_NOT_FOUND,"File not found");
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (CSVBuilderException e) {
+            e.printStackTrace();
         }
-        return recordCount;
+        return 0;
     }
 
     //METHOD TO GET EXTENSION OF CSV FILE
