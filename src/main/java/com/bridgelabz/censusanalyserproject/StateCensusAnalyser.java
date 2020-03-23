@@ -30,9 +30,11 @@ public class StateCensusAnalyser {
          }  catch (CSVBuilderException e) {
             e.printStackTrace();
         } catch (RuntimeException e) {
-            throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,"Delimiter or header not found");
+            throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,
+                                        "Delimiter or header not found");
         } catch (NoSuchFileException e) {
-            throw new MyCensusException(MyCensusException.MyException_Type.FILE_NOT_FOUND,"File not found");
+            throw new MyCensusException(MyCensusException.MyException_Type.FILE_NOT_FOUND,
+                                        "File not found");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -53,9 +55,11 @@ public class StateCensusAnalyser {
         }  catch (CSVBuilderException e) {
             e.printStackTrace();
         } catch (RuntimeException e) {
-            throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,"delimiter and header");
+            throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,
+                                        "delimiter and header");
         }catch (NoSuchFileException e) {
-            throw new MyCensusException(MyCensusException.MyException_Type.FILE_NOT_FOUND,"File not found");
+            throw new MyCensusException(MyCensusException.MyException_Type.FILE_NOT_FOUND,
+                                        "File not found");
         } catch (IOException e) {
             e.printStackTrace();
         }
