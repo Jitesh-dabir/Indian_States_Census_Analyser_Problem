@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.StreamSupport;
 
@@ -23,15 +24,16 @@ public class StateCensusAnalyser {
             throw new MyCensusException(MyCensusException.MyException_Type.NO_SUCH_TYPE,"No such a type");
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath)))
         {
-             Iterator<IndiaCensusCSV> censusCSVIterator = new CsvBuilder().getCSVFileIterator(reader,IndiaCensusCSV.class);
-            return this.getCount(censusCSVIterator);
-         } catch (RuntimeException e) {
+            IcsvBuilder csvBuilder = CsvBuilderFactory.createCsvBuilder();
+            List<IndiaCensusCSV> csvFileList = csvBuilder.getCSVFileList(reader, IndiaCensusCSV.class);
+            return csvFileList.size();
+         }  catch (CSVBuilderException e) {
+            e.printStackTrace();
+        } catch (RuntimeException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,"Delimiter or header not found");
         } catch (NoSuchFileException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.FILE_NOT_FOUND,"File not found");
         } catch (IOException e) {
-            e.printStackTrace();
-        }  catch (CSVBuilderException e) {
             e.printStackTrace();
         }
         return 0;
@@ -45,15 +47,16 @@ public class StateCensusAnalyser {
             throw new MyCensusException(MyCensusException.MyException_Type.NO_SUCH_TYPE,"No such a type");
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath)))
         {
-            Iterator<IndianStateCode> statesCSVIterator = new CsvBuilder().getCSVFileIterator(reader,IndianStateCode.class);
-            return this.getCount(statesCSVIterator);
+            IcsvBuilder csvBuilder = CsvBuilderFactory.createCsvBuilder();
+            List<IndianStateCode> csvFileList = csvBuilder.getCSVFileList(reader, IndianStateCode.class);
+            return csvFileList.size();
+        }  catch (CSVBuilderException e) {
+            e.printStackTrace();
         } catch (RuntimeException e) {
-            throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,"No such delimiter and header");
+            throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,"delimiter and header");
         }catch (NoSuchFileException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.FILE_NOT_FOUND,"File not found");
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (CSVBuilderException e) {
             e.printStackTrace();
         }
         return 0;
