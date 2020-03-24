@@ -4,7 +4,21 @@ import com.opencsv.bean.CsvBindByName;
 
 public class IndianStateCode {
 
-    //SETTER
+    @CsvBindByName(column = "SrNo",required = true)
+    private String srNo;
+
+    @CsvBindByName(column = "State",required = true)
+    private String state;
+
+    @CsvBindByName(column = "Name",required = true)
+    private String name;
+
+    @CsvBindByName(column = "TIN",required = true)
+    private String tin;
+
+    @CsvBindByName(column = "StateCode",required = true)
+    private String stateCode;
+
     public void setSrNo(String srNo) {
         this.srNo = srNo;
     }
@@ -25,7 +39,6 @@ public class IndianStateCode {
         this.stateCode = stateCode;
     }
 
-    //GETTER
     public String getSrNo() {
         return srNo;
     }
@@ -46,29 +59,14 @@ public class IndianStateCode {
         return stateCode;
     }
 
-    @CsvBindByName(column = "SrNo",required = true)
-        public String srNo;
-
-        @CsvBindByName(column = "State",required = true)
-        public String state;
-
-        @CsvBindByName(column = "Name",required = false)
-        public String name;
-
-        @CsvBindByName(column = "TIN",required = true)
-        public String tin;
-
-        @CsvBindByName(column = "StateCode",required = true)
-        public String stateCode;
-
-        @Override
-        public String toString() {
-            return "com.bridgelabz.censusanalyserproject.IndianStateCode {"+
-                    "SrNo='" + srNo + '\'' +
-                    " ,State='" + state + '\'' +
-                    " ,Name='" + name + '\'' +
-                    " ,TIN='" + tin + '\'' +
-                    " ,StateCode='" + stateCode + '\'' +
-                    '}';
-        }
+    @Override
+    public String toString() {
+        return "com.bridgelabz.censusanalyserproject.IndianStateCode {"+
+                "SrNo='" + srNo + '\'' +
+                " ,State='" + state + '\'' +
+                " ,Name='" + name + '\'' +
+                " ,TIN='" + tin + '\'' +
+                " ,StateCode='" + stateCode + '\'' +
+                '}';
     }
+}
