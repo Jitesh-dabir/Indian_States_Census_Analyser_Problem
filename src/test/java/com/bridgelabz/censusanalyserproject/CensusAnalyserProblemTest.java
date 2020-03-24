@@ -29,7 +29,7 @@ public class CensusAnalyserProblemTest {
     }
 
     @Test
-    public void givenIndianCensusCsvFile_WhenImproper_ShouldThrowException() throws MyCensusException {
+    public void givenIndianCensusCsvFile_WhenImproper_ShouldThrowException() {
         try {
             int numberOfRecord = censusAnalyserProblem.loadIndiaCensusData(WRONG_STATE_CENSUS_DATA_PATH);
             Assert.assertEquals(29, numberOfRecord);
@@ -39,7 +39,7 @@ public class CensusAnalyserProblemTest {
     }
 
     @Test
-    public void givenIndianCensusCsvFile_WhenImproperType_ShouldThrowException() throws MyCensusException {
+    public void givenIndianCensusCsvFile_WhenImproperType_ShouldThrowException() {
         try {
             int numberOfRecord = censusAnalyserProblem.loadIndiaCensusData(WRONG_TYPE_STATE_CENSUS_DATA_PATH);
             Assert.assertEquals(29, numberOfRecord);
@@ -49,7 +49,7 @@ public class CensusAnalyserProblemTest {
     }
 
     @Test
-    public void givenIndianCensusCsvFile_WhenImproperDelimiter_ShouldThrowException() throws MyCensusException {
+    public void givenIndianCensusCsvFile_WhenImproperDelimiter_ShouldThrowException() {
         try {
             int numberOfRecord = censusAnalyserProblem.loadIndiaCensusData(WRONG_DELIMITER_STATE_CENSUS_DATA_PATH);
             Assert.assertEquals(29, numberOfRecord);
@@ -59,7 +59,7 @@ public class CensusAnalyserProblemTest {
     }
 
     @Test
-    public void givenIndianCensusCsvFile_WhenImproperHeader_ShouldThrowException() throws MyCensusException {
+    public void givenIndianCensusCsvFile_WhenImproperHeader_ShouldThrowException() {
         try {
             int numberOfRecord = censusAnalyserProblem.loadIndiaCensusData(WRONG_HEADER_STATE_CENSUS_DATA_PATH);
             Assert.assertEquals(29, numberOfRecord);
@@ -85,7 +85,7 @@ public class CensusAnalyserProblemTest {
     }
 
     @Test
-    public void givenIndianStateCodeCsvFile_WhenImproperType_ShouldThrowException() throws MyCensusException {
+    public void givenIndianStateCodeCsvFile_WhenImproperType_ShouldThrowException() {
         try {
             int numberOfRecord = censusAnalyserProblem.loadIndianStateCodeData(WRONG_TYPE_INDIAN_STATE_CODE_INFORMATION_PATH);
             Assert.assertEquals(37, numberOfRecord);
@@ -95,7 +95,7 @@ public class CensusAnalyserProblemTest {
     }
 
     @Test
-    public void givenIndianStateCodeCsvFile_WhenImproperDelimiter_ShouldThrowException() throws MyCensusException {
+    public void givenIndianStateCodeCsvFile_WhenImproperDelimiter_ShouldThrowException() {
         try {
             int numberOfRecord = censusAnalyserProblem.loadIndianStateCodeData(WRONG_DELIMITER_INDIAN_STATE_CODE_INFORMATION_PATH);
             Assert.assertEquals(37, numberOfRecord);
@@ -105,7 +105,7 @@ public class CensusAnalyserProblemTest {
     }
 
     @Test
-    public void givenIndianStateCodeCsvFile_WhenImproperHeader_ShouldThrowException() throws MyCensusException {
+    public void givenIndianStateCodeCsvFile_WhenImproperHeader_ShouldThrowException() {
         try {
             int numberOfRecord = censusAnalyserProblem.loadIndianStateCodeData(WRONG_HEADER_INDIAN_STATE_CODE_INFORMATION_PATH);
             Assert.assertEquals(37, numberOfRecord);
@@ -146,6 +146,18 @@ public class CensusAnalyserProblemTest {
             Assert.assertEquals("West Bengal",censusCSV[28].state);
         } catch (MyCensusException e) {
             Assert.assertEquals(MyCensusException.MyException_Type.NO_SUCH_CENSUS_DATA,e.type);
+        }
+    }
+
+    @Test
+    public void givenIndianStateCodeData_WhenSortedOnStateCode_ShouldReturnFirstSortedResult() {
+        try {
+            censusAnalyserProblem.loadIndianStateCodeData(INDIAN_STATE_CODE_INFORMATION_PATH);
+            String sortedStateCodeData = censusAnalyserProblem.getSortedStateCodeData();
+            IndianStateCode[] stateCSV = new Gson().fromJson(sortedStateCodeData,IndianStateCode[].class);
+            Assert.assertEquals("AD",stateCSV[0].stateCode);
+        } catch (MyCensusException e) {
+            e.printStackTrace();
         }
     }
 }
