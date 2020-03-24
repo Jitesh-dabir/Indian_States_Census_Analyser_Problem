@@ -160,4 +160,16 @@ public class CensusAnalyserProblemTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void givenIndianStateCodeData_WhenSortedOnStateCode_ShouldReturnLastSortedResult() {
+        try {
+            censusAnalyserProblem.loadIndianStateCodeData(INDIAN_STATE_CODE_INFORMATION_PATH);
+            String sortedStateCodeData = censusAnalyserProblem.getSortedStateCodeData();
+            IndianStateCode[] stateCSV = new Gson().fromJson(sortedStateCodeData,IndianStateCode[].class);
+            Assert.assertEquals("WB",stateCSV[36].stateCode);
+        } catch (MyCensusException e) {
+            e.printStackTrace();
+        }
+    }
 }
