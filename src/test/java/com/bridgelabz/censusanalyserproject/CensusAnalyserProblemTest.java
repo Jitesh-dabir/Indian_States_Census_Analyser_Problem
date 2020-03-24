@@ -137,4 +137,15 @@ public class CensusAnalyserProblemTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void givenIndianCensusData_WhenImproperFile_ShouldThrowException() {
+        try {
+            String sortedCensusData = censusAnalyserProblem.getSortedCensusStateData();
+            IndiaCensusCSV[] censusCSV = new Gson().fromJson(sortedCensusData, IndiaCensusCSV[].class);
+            Assert.assertEquals("West Bengal",censusCSV[28].state);
+        } catch (MyCensusException e) {
+            Assert.assertEquals(MyCensusException.MyException_Type.NO_SUCH_CENSUS_DATA,e.type);
+        }
+    }
 }
