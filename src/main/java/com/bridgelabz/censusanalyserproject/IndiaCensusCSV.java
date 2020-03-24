@@ -39,24 +39,24 @@ public class IndiaCensusCSV {
     }
 
     @CsvBindByName(column = "State",required = true)
-    public String state;
+    private String state;
 
     @CsvBindByName(column = "Population",required = true)
-    public String population;
+    private String population;
 
     @CsvBindByName(column = "AreaInSqKm",required = true)
-    public String areaInSqKm;
+    private String areaInSqKm;
 
     @CsvBindByName(column = "DensityPerSqKm",required = true)
-    public String densityPerSqKm;
+    private String densityPerSqKm;
 
     @Override
     public String toString() {
         return "com.bridgelabz.censusanalyserproject.IndiaCensusCSV {"+
-            "State='" + state + '\'' +
+                "State='" + state + '\'' +
                 " ,Population='" + population + '\'' +
                 " ,AreaInSqKm='" + areaInSqKm + '\'' +
                 " ,DensityPerSqKm='" + densityPerSqKm + '\'' +
                 '}';
-        }
     }
+}
