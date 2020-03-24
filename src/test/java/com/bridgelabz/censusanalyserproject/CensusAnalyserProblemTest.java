@@ -117,9 +117,22 @@ public class CensusAnalyserProblemTest {
     @Test
     public void givenIndianCensusData_WhenSortedOnState_ShouldReturnFirstSortedResult() {
         try {
-            String sortedCensusData = censusAnalyserProblem.getSortedCensusStateData(STATE_CENSUS_DATA_PATH);
+            censusAnalyserProblem.loadIndiaCensusData(STATE_CENSUS_DATA_PATH);
+            String sortedCensusData = censusAnalyserProblem.getSortedCensusStateData();
             IndiaCensusCSV[] censusCSV = new Gson().fromJson(sortedCensusData, IndiaCensusCSV[].class);
             Assert.assertEquals("Andhra Pradesh",censusCSV[0].state);
+        } catch (MyCensusException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenIndianCensusData_WhenSortedOnState_ShouldReturnLastSortedResult() {
+        try {
+            censusAnalyserProblem.loadIndiaCensusData(STATE_CENSUS_DATA_PATH);
+            String sortedCensusData = censusAnalyserProblem.getSortedCensusStateData();
+            IndiaCensusCSV[] censusCSV = new Gson().fromJson(sortedCensusData, IndiaCensusCSV[].class);
+            Assert.assertEquals("West Bengal",censusCSV[28].state);
         } catch (MyCensusException e) {
             e.printStackTrace();
         }
