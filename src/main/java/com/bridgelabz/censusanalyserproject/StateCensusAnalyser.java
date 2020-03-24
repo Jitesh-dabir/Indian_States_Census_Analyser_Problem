@@ -2,11 +2,14 @@ package com.bridgelabz.censusanalyserproject;
 
 import com.bridgelabz.exception.CSVBuilderException;
 import com.bridgelabz.exception.MyCensusException;
+import com.google.gson.Gson;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -17,6 +20,8 @@ public class StateCensusAnalyser {
     //CONSTANT FOR REGEX PATTERN
     private static final String PATTERN_FOR_CSV_FILE = "^[a-zA-Z0-9./_@]*[.]+[c][s][v]$";
 
+    List<IndiaCensusCSV> csvFileList = null;
+
     //METHOD TO LOAD THE CSV FILE AND GET
     public int loadIndiaCensusData(String csvFilePath) throws MyCensusException {
         String extension = getFileExtension(csvFilePath);
@@ -25,16 +30,16 @@ public class StateCensusAnalyser {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath)))
         {
             IcsvBuilder csvBuilder = CsvBuilderFactory.createCsvBuilder();
-            List<IndiaCensusCSV> csvFileList = csvBuilder.getCSVFileList(reader, IndiaCensusCSV.class);
+            csvFileList = csvBuilder.getCSVFileList(reader, IndiaCensusCSV.class);
             return csvFileList.size();
-         }  catch (CSVBuilderException e) {
-            e.printStackTrace();
-        } catch (RuntimeException e) {
+         }  catch (RuntimeException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,
                                         "Delimiter or header not found");
         } catch (NoSuchFileException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.FILE_NOT_FOUND,
                                         "File not found");
+        } catch (CSVBuilderException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -52,14 +57,14 @@ public class StateCensusAnalyser {
             IcsvBuilder csvBuilder = CsvBuilderFactory.createCsvBuilder();
             List<IndianStateCode> csvFileList = csvBuilder.getCSVFileList(reader, IndianStateCode.class);
             return csvFileList.size();
-        }  catch (CSVBuilderException e) {
-            e.printStackTrace();
         } catch (RuntimeException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,
                                         "delimiter and header");
-        }catch (NoSuchFileException e) {
+        } catch (NoSuchFileException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.FILE_NOT_FOUND,
                                         "File not found");
+        } catch (CSVBuilderException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -84,6 +89,31 @@ public class StateCensusAnalyser {
         Iterable<E> iterable = () -> iterator;
         int recordCount= (int) StreamSupport.stream(iterable.spliterator(),false).count();
         return recordCount;
+    }
+
+    public String getSortedCensusStateData(String csvFilePath) throws MyCensusException {
+        loadIndiaCensusData(csvFilePath);
+        if (csvFileList == null || csvFileList.size() == 0) {
+            throw new MyCensusException( MyCensusException.MyException_Type.NO_SUCH_CENSUS_DATA,"Census data not found");
+        }
+        csvFileList.sort(Comparator.comparing(e -> e.getState()));
+        String toJson = new Gson().toJson(csvFileList);
+        return toJson;
+    }
+
+    private void sort(List<IndiaCensusCSV> csvFileList, Comparator<IndiaCensusCSV> censusComparator) {
+        for (int i = 0; i < csvFileList.size(); i++) {
+            for (int j = 0; j < csvFileList.size() - i - 1; j++) {
+                IndiaCensusCSV census1 = csvFileList.get(j);
+                IndiaCensusCSV census2 = csvFileList.get(j + 1);
+                if (censusComparator.compare(census1, census2) > 0) {
+                    csvFileList.set(j, census2);
+                    csvFileList.set(j + 1, census1);
+                }
+
+            }
+
+        }
     }
 
     public static void main(String[] args)  {
