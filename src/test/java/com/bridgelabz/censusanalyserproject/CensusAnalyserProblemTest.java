@@ -172,4 +172,16 @@ public class CensusAnalyserProblemTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void givenIndianStateCodeData_WhenImproperFile_ShouldThrowException() {
+        try {
+            censusAnalyserProblem.loadIndianStateCodeData(INDIAN_STATE_CODE_INFORMATION_PATH);
+            String sortedStateCodeData = censusAnalyserProblem.getSortedStateCodeData();
+            IndianStateCode[] stateCSV = new Gson().fromJson(sortedStateCodeData,IndianStateCode[].class);
+            Assert.assertEquals("WB",stateCSV[36].getStateCode());
+        } catch (MyCensusException e) {
+            Assert.assertEquals(MyCensusException.MyException_Type.NO_SUCH_CENSUS_DATA,e.type);
+        }
+    }
 }
