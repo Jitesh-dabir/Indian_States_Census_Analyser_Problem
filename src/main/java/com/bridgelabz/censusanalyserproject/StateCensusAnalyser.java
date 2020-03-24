@@ -21,6 +21,7 @@ public class StateCensusAnalyser {
     private static final String PATTERN_FOR_CSV_FILE = "^[a-zA-Z0-9./_@]*[.]+[c][s][v]$";
 
     List<IndiaCensusCSV> csvFileList = null;
+    List<IndianStateCode> stateCodeList = null;
 
     //METHOD TO LOAD THE CSV FILE AND GET
     public int loadIndiaCensusData(String csvFilePath) throws MyCensusException {
@@ -32,12 +33,12 @@ public class StateCensusAnalyser {
             IcsvBuilder csvBuilder = CsvBuilderFactory.createCsvBuilder();
             csvFileList = csvBuilder.getCSVFileList(reader, IndiaCensusCSV.class);
             return csvFileList.size();
-         }  catch (RuntimeException e) {
+        }  catch (RuntimeException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,
-                                        "Delimiter or header not found");
+                    "Delimiter or header not found");
         } catch (NoSuchFileException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.FILE_NOT_FOUND,
-                                        "File not found");
+                    "File not found");
         } catch (CSVBuilderException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -55,14 +56,14 @@ public class StateCensusAnalyser {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath)))
         {
             IcsvBuilder csvBuilder = CsvBuilderFactory.createCsvBuilder();
-            List<IndianStateCode> csvFileList = csvBuilder.getCSVFileList(reader, IndianStateCode.class);
-            return csvFileList.size();
+            stateCodeList = csvBuilder.getCSVFileList(reader, IndianStateCode.class);
+            return stateCodeList.size();
         } catch (RuntimeException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,
-                                        "delimiter and header");
+                    "delimiter and header");
         } catch (NoSuchFileException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.FILE_NOT_FOUND,
-                                        "File not found");
+                    "File not found");
         } catch (CSVBuilderException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -91,8 +92,7 @@ public class StateCensusAnalyser {
         return recordCount;
     }
 
-    public String getSortedCensusStateData(String csvFilePath) throws MyCensusException {
-        loadIndiaCensusData(csvFilePath);
+    public String getSortedCensusStateData() throws MyCensusException {
         if (csvFileList == null || csvFileList.size() == 0) {
             throw new MyCensusException( MyCensusException.MyException_Type.NO_SUCH_CENSUS_DATA,"Census data not found");
         }
@@ -101,6 +101,14 @@ public class StateCensusAnalyser {
         return toJson;
     }
 
+    public String getSortedStateCodeData() throws MyCensusException {
+        if (stateCodeList == null || stateCodeList.size() == 0) {
+            throw new MyCensusException( MyCensusException.MyException_Type.NO_SUCH_CENSUS_DATA,"Census data not found");
+        }
+        stateCodeList.sort(Comparator.comparing(e -> e.getStateCode()));
+        String toJson = new Gson().toJson(stateCodeList);
+        return toJson;
+    }
     private void sort(List<IndiaCensusCSV> csvFileList, Comparator<IndiaCensusCSV> censusComparator) {
         for (int i = 0; i < csvFileList.size(); i++) {
             for (int j = 0; j < csvFileList.size() - i - 1; j++) {
@@ -110,7 +118,6 @@ public class StateCensusAnalyser {
                     csvFileList.set(j, census2);
                     csvFileList.set(j + 1, census1);
                 }
-
             }
 
         }
