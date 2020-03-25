@@ -3,16 +3,14 @@ package com.bridgelabz.censusanalyserproject;
 import com.bridgelabz.exception.CSVBuilderException;
 import com.bridgelabz.exception.MyCensusException;
 import com.google.gson.Gson;
-
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class StateCensusAnalyser {
@@ -22,17 +20,28 @@ public class StateCensusAnalyser {
 
     List<IndiaCensusCSV> csvFileList = null;
     List<IndianStateCode> stateCodeList = null;
+    Map<String, IndiaCensusCSV> stateCensusMap = null;
+    Map<String, IndianStateCode> csvStateCodeMap = null;
 
-    //METHOD TO LOAD THE CSV FILE AND GET
+    public StateCensusAnalyser() {
+        this.stateCensusMap = new HashMap<>();
+        this.csvStateCodeMap = new HashMap<>();
+    }
+
+    //METHOD TO LOAD THE CSV FILE
     public int loadIndiaCensusData(String csvFilePath) throws MyCensusException {
         String extension = getFileExtension(csvFilePath);
         if (!Pattern.matches(PATTERN_FOR_CSV_FILE,extension))
             throw new MyCensusException(MyCensusException.MyException_Type.NO_SUCH_TYPE,"No such a type");
-        try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath)))
-        {
+        try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             IcsvBuilder csvBuilder = CsvBuilderFactory.createCsvBuilder();
-            csvFileList = csvBuilder.getCSVFileList(reader, IndiaCensusCSV.class);
-            return csvFileList.size();
+            Iterator<IndiaCensusCSV> stateCensusIterator = csvBuilder.getCSVFileIterator(reader,IndiaCensusCSV.class);
+            while (stateCensusIterator.hasNext()) {
+                IndiaCensusCSV stateCensus = stateCensusIterator.next();
+                this.stateCensusMap.put(stateCensus.getState(),stateCensus);
+                csvFileList = stateCensusMap.values().stream().collect(Collectors.toList());
+            }
+            return stateCensusMap.size();
         }  catch (RuntimeException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,
                     "Delimiter or header not found");
@@ -47,17 +56,21 @@ public class StateCensusAnalyser {
         return 0;
     }
 
-    //METHOD TO LOAD THE CSV FILE AND GET
+    //METHOD TO LOAD THE CSV FILE
     public int loadIndianStateCodeData(String csvFilePath) throws MyCensusException {
         //LOCAL VARIABLE
         String extension = getFileExtension(csvFilePath);
         if (!Pattern.matches(PATTERN_FOR_CSV_FILE,extension))
             throw new MyCensusException(MyCensusException.MyException_Type.NO_SUCH_TYPE,"No such a type");
-        try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath)))
-        {
+        try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             IcsvBuilder csvBuilder = CsvBuilderFactory.createCsvBuilder();
-            stateCodeList = csvBuilder.getCSVFileList(reader, IndianStateCode.class);
-            return stateCodeList.size();
+            Iterator<IndianStateCode> stateCensusIterator = csvBuilder.getCSVFileIterator(reader,IndianStateCode.class);
+            while (stateCensusIterator.hasNext()) {
+                IndianStateCode stateCensus = stateCensusIterator.next();
+                this.csvStateCodeMap.put(stateCensus.getStateCode(),stateCensus);
+                stateCodeList = csvStateCodeMap.values().stream().collect(Collectors.toList());
+            }
+            return csvStateCodeMap.size();
         } catch (RuntimeException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,
                     "delimiter and header");
