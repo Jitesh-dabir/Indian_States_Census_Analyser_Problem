@@ -208,4 +208,16 @@ public class CensusAnalyserProblemTest {
             e.getStackTrace();
         }
     }
+
+    @Test
+    public void givenTheStateCensusData_WhenSortedOnAreaInPerSqKm_ShouldReturnSortedResult() {
+        try {
+            censusAnalyserProblem.loadIndiaCensusData(STATE_CENSUS_DATA_PATH);
+            String sortedCensusData = censusAnalyserProblem.getAreaWiseSortedCensusData();
+            CensusDAO[] csvStateCensuses = new Gson().fromJson(sortedCensusData, CensusDAO[].class);
+            Assert.assertEquals(342239, csvStateCensuses[0].areaInSqKm);
+        } catch (MyCensusException e) {
+            e.getStackTrace();
+        }
+    }
 }
