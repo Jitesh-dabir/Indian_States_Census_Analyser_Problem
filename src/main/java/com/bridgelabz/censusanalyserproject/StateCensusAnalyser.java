@@ -34,11 +34,10 @@ public class StateCensusAnalyser {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             IcsvBuilder csvBuilder = CsvBuilderFactory.createCsvBuilder();
             Iterator<IndiaCensusCSV> stateCensusIterator = csvBuilder.getCSVFileIterator(reader,IndiaCensusCSV.class);
-            while (stateCensusIterator.hasNext()) {
-                CensusDAO censusDAO = new CensusDAO(stateCensusIterator.next());
-                this.censusMap.put(censusDAO.state, censusDAO);
-                censusList = censusMap.values().stream().collect(Collectors.toList());
-            }
+            Iterable<IndiaCensusCSV> stateCensuses = () -> stateCensusIterator;
+            StreamSupport.stream(stateCensuses.spliterator(), false)
+                    .forEach(csvStateCensus -> censusMap.put(csvStateCensus.getState(), new CensusDAO(csvStateCensus)));
+            censusList = censusMap.values().stream().collect(Collectors.toList());
             return censusMap.size();
         }  catch (RuntimeException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,
@@ -63,11 +62,10 @@ public class StateCensusAnalyser {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             IcsvBuilder csvBuilder = CsvBuilderFactory.createCsvBuilder();
             Iterator<IndianStateCode> stateCensusIterator = csvBuilder.getCSVFileIterator(reader,IndianStateCode.class);
-            while (stateCensusIterator.hasNext()) {
-                CensusDAO censusDAO = new CensusDAO(stateCensusIterator.next());
-                this.censusMap.put(censusDAO.stateCode, censusDAO);
-                censusList = censusMap.values().stream().collect(Collectors.toList());
-            }
+            Iterable<IndianStateCode> stateCensuses = () -> stateCensusIterator;
+            StreamSupport.stream(stateCensuses.spliterator(), false)
+                    .forEach(csvStateCensus -> censusMap.put(csvStateCensus.getStateCode(), new CensusDAO(csvStateCensus)));
+            censusList = censusMap.values().stream().collect(Collectors.toList());
             return censusMap.size();
         } catch (RuntimeException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER,
