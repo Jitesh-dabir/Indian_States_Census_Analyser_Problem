@@ -184,4 +184,16 @@ public class CensusAnalyserProblemTest {
             Assert.assertEquals(MyCensusException.MyException_Type.NO_SUCH_CENSUS_DATA,e.type);
         }
     }
+
+    @Test
+    public void givenTheStateCensusData_WhenSortedOnPopulation_ShouldReturnSortedResult() {
+        try {
+            censusAnalyserProblem.loadIndianStateCodeData(STATE_CENSUS_DATA_PATH);
+            String sortedCensusData = censusAnalyserProblem.getPopulationWiseSortedCensusData();
+            IndiaCensusCSV[] stateCSV = new Gson().fromJson(sortedCensusData,IndiaCensusCSV[].class);
+            Assert.assertEquals(199812341, stateCSV[0].getPopulation());
+        } catch (MyCensusException e) {
+            e.getStackTrace();
+        }
+    }
 }
