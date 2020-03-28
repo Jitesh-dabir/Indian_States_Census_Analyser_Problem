@@ -19,9 +19,6 @@ public class CensusAnalyserProblemTest {
     private static final String WRONG_DELIMITER_INDIAN_STATE_CODE_INFORMATION_PATH = "./src/test/resources/WrongDelimiterStateCodeData.csv";
     private static final String WRONG_HEADER_INDIAN_STATE_CODE_INFORMATION_PATH = "./src/test/resources/WrongHeaderStateCodeData.csv";
     private static final String US_CENSUS_DATA_PATH = "./src/test/resources/USCensusData.csv";
-    private static final String INDIAN_STATE_CODE_FILE = "src/main/java/com/bridgelabz/censusanalyserproject/IndianStateCode";
-    private static final String INDIAN_STATE_CENSUS_FILE = "src/main/java/com/bridgelabz/censusanalyserproject/IndiaCensusCSV.java";
-
 
     //OBJECT CREATION
     StateCensusAnalyser censusAnalyserProblem = new StateCensusAnalyser();
@@ -220,6 +217,16 @@ public class CensusAnalyserProblemTest {
             String sortedCensusData = censusAnalyserProblem.getAreaWiseSortedCensusData();
             CensusDAO[] csvStateCensuses = new Gson().fromJson(sortedCensusData, CensusDAO[].class);
             Assert.assertEquals(342239, csvStateCensuses[0].areaInSqKm);
+        } catch (MyCensusException e) {
+            e.getStackTrace();
+        }
+    }
+
+    @Test
+    public void givenTheUSStateCensusData_WhenProper_ShouldReturnCorrectRecordCount() {
+        try {
+            int numberOfRecords = censusAnalyserProblem.loadUSCensusData(US_CENSUS_DATA_PATH);
+            Assert.assertEquals(51,numberOfRecords);
         } catch (MyCensusException e) {
             e.getStackTrace();
         }
