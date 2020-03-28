@@ -34,6 +34,28 @@ public class StateCensusAnalyser {
         return this.loadCensusData(csvFilePath, IndianStateCode.class);
     }
 
+    //FUNCTION TO LOAD US CENSUS DATA
+    public int loadUSCensusData(String csvFilePath) throws MyCensusException {
+        int numberOfRecords = 0;
+        String extension = getFileExtension(csvFilePath);
+        if (!Pattern.matches(PATTERN_FOR_CSV_FILE,extension))
+            throw new MyCensusException(MyCensusException.MyException_Type.NO_SUCH_TYPE,"No such a type");
+        try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
+            IcsvBuilder csvBuilder = CsvBuilderFactory.createCsvBuilder();
+            List<USCensusCSV> csvUSCensusList = csvBuilder.getCSVFileList(reader,USCensusCSV.class);
+            numberOfRecords = csvUSCensusList.size();
+        } catch (RuntimeException e) {
+            throw new MyCensusException(MyCensusException.MyException_Type.WRONG_DELIMITER_OR_HEADER, "Incorrect delimiter or header.");
+        } catch (NoSuchFileException e) {
+            throw new MyCensusException(MyCensusException.MyException_Type.FILE_NOT_FOUND, "Incorrect file.");
+        } catch (CSVBuilderException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.getStackTrace();
+        }
+        return numberOfRecords;
+    }
+
     private <E> int loadCensusData(String csvFilePath, Class<E> censusCsvClass) throws MyCensusException {
         String extension = getFileExtension(csvFilePath);
         if (!Pattern.matches(PATTERN_FOR_CSV_FILE,extension))
