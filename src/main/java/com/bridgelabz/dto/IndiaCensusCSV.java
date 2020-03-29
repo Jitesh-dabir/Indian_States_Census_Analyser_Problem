@@ -9,15 +9,15 @@ public class IndiaCensusCSV {
         this.state = state;
     }
 
-    public void setPopulation(String population) {
+    public void setPopulation(int population) {
         this.population = population;
     }
 
-    public void setAreaInSqKm(String areaInSqKm) {
+    public void setAreaInSqKm(int areaInSqKm) {
         this.areaInSqKm = areaInSqKm;
     }
 
-    public void setDensityPerSqKm(String densityPerSqKm) {
+    public void setDensityPerSqKm(int densityPerSqKm) {
         this.densityPerSqKm = densityPerSqKm;
     }
 
@@ -26,15 +26,15 @@ public class IndiaCensusCSV {
         return state;
     }
 
-    public String getPopulation() {
+    public int getPopulation() {
         return population;
     }
 
-    public String getAreaInSqKm() {
+    public int getAreaInSqKm() {
         return areaInSqKm;
     }
 
-    public String getDensityPerSqKm() {
+    public int getDensityPerSqKm() {
         return densityPerSqKm;
     }
 
@@ -42,13 +42,13 @@ public class IndiaCensusCSV {
     private String state;
 
     @CsvBindByName(column = "Population",required = true)
-    private String population;
+    private int population;
 
     @CsvBindByName(column = "AreaInSqKm",required = true)
-    private String areaInSqKm;
+    private int areaInSqKm;
 
     @CsvBindByName(column = "DensityPerSqKm",required = true)
-    private String densityPerSqKm;
+    private int densityPerSqKm;
 
     @Override
     public String toString() {

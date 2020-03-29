@@ -5,7 +5,7 @@ import com.opencsv.bean.CsvBindByName;
 public class IndianStateCode {
 
     @CsvBindByName(column = "SrNo",required = true)
-    private String srNo;
+    private int srNo;
 
     @CsvBindByName(column = "State",required = true)
     private String state;
@@ -14,12 +14,12 @@ public class IndianStateCode {
     private String name;
 
     @CsvBindByName(column = "TIN",required = true)
-    private String tin;
+    private int tin;
 
     @CsvBindByName(column = "StateCode",required = true)
     private String stateCode;
 
-    public void setSrNo(String srNo) {
+    public void setSrNo(int srNo) {
         this.srNo = srNo;
     }
 
@@ -31,7 +31,7 @@ public class IndianStateCode {
         this.name = name;
     }
 
-    public void setTin(String tin) {
+    public void setTin(int tin) {
         this.tin = tin;
     }
 
@@ -39,7 +39,7 @@ public class IndianStateCode {
         this.stateCode = stateCode;
     }
 
-    public String getSrNo() {
+    public int getSrNo() {
         return srNo;
     }
 
@@ -51,7 +51,7 @@ public class IndianStateCode {
         return name;
     }
 
-    public String getTin() {
+    public int getTin() {
         return tin;
     }
 
