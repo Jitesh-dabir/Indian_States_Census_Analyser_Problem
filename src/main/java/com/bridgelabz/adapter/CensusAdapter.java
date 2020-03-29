@@ -1,5 +1,9 @@
-package com.bridgelabz.censusanalyserproject;
+package com.bridgelabz.adapter;
 
+import com.bridgelabz.censusanalyserproject.*;
+import com.bridgelabz.dao.CensusDAO;
+import com.bridgelabz.dto.IndiaCensusCSV;
+import com.bridgelabz.dto.USCensusCSV;
 import com.bridgelabz.exception.CSVBuilderException;
 import com.bridgelabz.exception.MyCensusException;
 
@@ -7,13 +11,11 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public abstract class CensusAdapter {
@@ -37,12 +39,13 @@ public abstract class CensusAdapter {
                         .map(IndiaCensusCSV.class::cast)
                         .forEach(censusCSV -> censusMap.put(censusCSV.getState(), new CensusDAO(censusCSV)));
                 return censusMap;
-            }
-            if (censusCsvClass.getName().contains("USCensusCSV")) {
+            } else if (censusCsvClass.getName().contains("USCensusCSV")) {
                 StreamSupport.stream(csvIterable.spliterator(), false)
                         .map(USCensusCSV.class::cast)
                         .forEach(censusCSV -> censusMap.put(censusCSV.getState(), new CensusDAO(censusCSV)));
                 return censusMap;
+            } else {
+                throw new MyCensusException(MyCensusException.MyException_Type.NO_SUCH_COUNTRY,"Wrong country name");
             }
         } catch (NoSuchFileException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.FILE_NOT_FOUND, "File not found");
