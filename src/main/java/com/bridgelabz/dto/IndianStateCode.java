@@ -1,22 +1,22 @@
-package com.bridgelabz.censusanalyserproject;
+package com.bridgelabz.dto;
 
 import com.opencsv.bean.CsvBindByName;
 
 public class IndianStateCode {
 
-    @CsvBindByName(column = "SrNo",required = true)
+    @CsvBindByName(column = "SrNo", required = true)
     private int srNo;
 
-    @CsvBindByName(column = "State",required = true)
+    @CsvBindByName(column = "State", required = true)
     private String state;
 
-    @CsvBindByName(column = "Name",required = true)
+    @CsvBindByName(column = "Name", required = true)
     private String name;
 
-    @CsvBindByName(column = "TIN",required = true)
+    @CsvBindByName(column = "TIN", required = true)
     private int tin;
 
-    @CsvBindByName(column = "StateCode",required = true)
+    @CsvBindByName(column = "StateCode", required = true)
     private String stateCode;
 
     public void setSrNo(int srNo) {
@@ -61,7 +61,7 @@ public class IndianStateCode {
 
     @Override
     public String toString() {
-        return "com.bridgelabz.censusanalyserproject.IndianStateCode {"+
+        return "com.bridgelabz.dto.IndianStateCode {" +
                 "SrNo='" + srNo + '\'' +
                 " ,State='" + state + '\'' +
                 " ,Name='" + name + '\'' +

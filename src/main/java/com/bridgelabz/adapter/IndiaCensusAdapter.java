@@ -6,6 +6,7 @@ import com.bridgelabz.dto.IndiaCensusCSV;
 import com.bridgelabz.dto.IndianStateCode;
 import com.bridgelabz.exception.CSVBuilderException;
 import com.bridgelabz.exception.MyCensusException;
+import com.bridgelabz.service.StateCensusAnalyser;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -27,7 +28,7 @@ public class IndiaCensusAdapter extends CensusAdapter {
         Map<String, CensusDAO> censusMap = super.loadCensusData(IndiaCensusCSV.class, csvFilePath[0]);
         if (csvFilePath.length == 1)
             return censusMap;
-        return this.loadStateCodeCensusData(censusMap,csvFilePath[1]);
+        return this.loadStateCodeCensusData(censusMap, csvFilePath[1]);
     }
 
     //FUNCTION TO LOAD US CENSUS DATA

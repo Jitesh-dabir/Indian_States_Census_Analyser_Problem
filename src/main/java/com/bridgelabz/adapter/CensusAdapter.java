@@ -6,6 +6,7 @@ import com.bridgelabz.dto.IndiaCensusCSV;
 import com.bridgelabz.dto.USCensusCSV;
 import com.bridgelabz.exception.CSVBuilderException;
 import com.bridgelabz.exception.MyCensusException;
+import com.bridgelabz.service.StateCensusAnalyser;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -26,7 +27,7 @@ public abstract class CensusAdapter {
 
     public abstract Map<String, CensusDAO> loadCensusData(String... csvFilePath) throws MyCensusException;
 
-    public <E> Map<String, CensusDAO> loadCensusData(Class<E> censusCsvClass,String... csvFilePath) throws MyCensusException {
+    public <E> Map<String, CensusDAO> loadCensusData(Class<E> censusCsvClass, String... csvFilePath) throws MyCensusException {
         String extension = StateCensusAnalyser.getFileExtension(csvFilePath[0]);
         if (!Pattern.matches(PATTERN_FOR_CSV_FILE, extension))
             throw new MyCensusException(MyCensusException.MyException_Type.NO_SUCH_TYPE, "No such a type");
@@ -45,7 +46,7 @@ public abstract class CensusAdapter {
                         .forEach(censusCSV -> censusMap.put(censusCSV.getState(), new CensusDAO(censusCSV)));
                 return censusMap;
             } else {
-                throw new MyCensusException(MyCensusException.MyException_Type.NO_SUCH_COUNTRY,"Wrong country name");
+                throw new MyCensusException(MyCensusException.MyException_Type.NO_SUCH_COUNTRY, "Wrong country name");
             }
         } catch (NoSuchFileException e) {
             throw new MyCensusException(MyCensusException.MyException_Type.FILE_NOT_FOUND, "File not found");

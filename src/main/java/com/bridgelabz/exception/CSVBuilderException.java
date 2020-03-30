@@ -2,14 +2,15 @@ package com.bridgelabz.exception;
 
 public class CSVBuilderException extends Exception {
 
-    public MyCensusException.MyException_Type type;
+    public MyException_Type type;
 
     //ENUM CLASS
-     enum Exception_Type {
-         UNABLE_TO_PARSE;
+    public enum MyException_Type {
+        UNABLE_TO_PARSE, NO_SUCH_FILE, NO_SUCH_FILE_TYPE, NO_SUCH_DELIMITER_OR_HEADER;
     }
+
     //CONSTRUCTOR
-    public CSVBuilderException(MyCensusException.MyException_Type type,String message) {
+    public CSVBuilderException(MyException_Type type, String message) {
         super(message);
         this.type = type;
     }

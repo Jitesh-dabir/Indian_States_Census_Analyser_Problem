@@ -23,10 +23,10 @@ public class CensusDAO {
     }
 
     public CensusDAO(IndianStateCode csvStateCode) {
-        this.srNo=csvStateCode.getSrNo();
-        this.state=csvStateCode.getState();
-        this.name=csvStateCode.getName();
-        this.tin=csvStateCode.getTin();
+        this.srNo = csvStateCode.getSrNo();
+        this.state = csvStateCode.getState();
+        this.name = csvStateCode.getName();
+        this.tin = csvStateCode.getTin();
         this.stateCode = csvStateCode.getStateCode();
     }
 
