@@ -3,6 +3,7 @@ package com.bridgelabz.dao;
 import com.bridgelabz.dto.IndiaCensusCSV;
 import com.bridgelabz.dto.IndianStateCode;
 import com.bridgelabz.dto.USCensusCSV;
+import com.bridgelabz.service.StateCensusAnalyser;
 
 public class CensusDAO {
     public int population;
@@ -35,5 +36,13 @@ public class CensusDAO {
         areaInSqKm = usCensusCSV.getTotalArea();
         densityPerSqKm = usCensusCSV.getDensityPerSqKm();
         population = usCensusCSV.getPopulation();
+    }
+
+    public Object getCensusDTO(StateCensusAnalyser.COUNTRY country) {
+        if (country.equals(StateCensusAnalyser.COUNTRY.INDIA))
+            return new IndiaCensusCSV(state, population, areaInSqKm, densityPerSqKm);
+        if (country.equals(StateCensusAnalyser.COUNTRY.US))
+            return new USCensusCSV(stateCode, state, population, areaInSqKm, population);
+        return null;
     }
 }
