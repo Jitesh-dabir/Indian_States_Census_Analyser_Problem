@@ -235,4 +235,16 @@ public class CensusAnalyserProblemTest {
             e.getStackTrace();
         }
     }
+
+    @Test
+    public void givenTheUSStateCensusData_WhenSortedOnPopulation_ShouldReturnSortedResult() {
+        try {
+            censusAnalyserProblem.loadCensusData(StateCensusAnalyser.COUNTRY.US, US_CENSUS_DATA_PATH);
+            String sortedCensusData = censusAnalyserProblem.getPopulationWiseSortedCensusData();
+            CensusDAO[] censusCSV = new Gson().fromJson(sortedCensusData, CensusDAO[].class);
+            Assert.assertEquals("California", censusCSV[0].state);
+        } catch (MyCensusException e) {
+            e.getStackTrace();
+        }
+    }
 }
