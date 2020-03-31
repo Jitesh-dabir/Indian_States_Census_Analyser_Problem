@@ -33,7 +33,6 @@ public class IndiaCensusAdapter extends CensusAdapter {
 
     //FUNCTION TO LOAD US CENSUS DATA
     private <E> Map<String, CensusDAO> loadStateCodeCensusData(Map<String, CensusDAO> censusMap, String csvFilePath) throws MyCensusException {
-        //Map<String, CensusDAO> censusMap = null;
         String extension = StateCensusAnalyser.getFileExtension(csvFilePath);
         if (!Pattern.matches(PATTERN_FOR_CSV_FILE, extension))
             throw new MyCensusException(MyCensusException.MyException_Type.NO_SUCH_TYPE, "No such a type");
