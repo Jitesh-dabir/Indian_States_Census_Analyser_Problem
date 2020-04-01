@@ -9,6 +9,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import com.google.gson.Gson;
 
+import javax.xml.bind.SchemaOutputResolver;
+
 public class CensusAnalyserProblemTest {
 
     //CONSTANT
@@ -210,7 +212,7 @@ public class CensusAnalyserProblemTest {
             censusAnalyserProblem.loadCensusData(STATE_CENSUS_DATA_PATH);
             String sortedCensusData = censusAnalyserProblem.getSortCensusData(StateCensusAnalyser.SORTING_MODE.POPULATION);
             CensusDAO[] censusCSV = new Gson().fromJson(sortedCensusData, CensusDAO[].class);
-            Assert.assertEquals(199812341, censusCSV[28].population);
+            Assert.assertEquals("Uttar Pradesh", censusCSV[0].state);
         } catch (MyCensusException e) {
             e.getStackTrace();
         }
@@ -223,7 +225,7 @@ public class CensusAnalyserProblemTest {
             censusAnalyserProblem.loadCensusData(STATE_CENSUS_DATA_PATH);
             String sortedCensusData = censusAnalyserProblem.getSortCensusData(StateCensusAnalyser.SORTING_MODE.DENSITY);
             CensusDAO[] censusCSV = new Gson().fromJson(sortedCensusData, CensusDAO[].class);
-            Assert.assertEquals(1102, censusCSV[28].densityPerSqKm, 0);
+            Assert.assertEquals("Bihar", censusCSV[0].state);
         } catch (MyCensusException e) {
             e.getStackTrace();
         }
@@ -236,7 +238,7 @@ public class CensusAnalyserProblemTest {
             censusAnalyserProblem.loadCensusData(STATE_CENSUS_DATA_PATH);
             String sortedCensusData = censusAnalyserProblem.getSortCensusData(StateCensusAnalyser.SORTING_MODE.AREA);
             CensusDAO[] csvStateCensuses = new Gson().fromJson(sortedCensusData, CensusDAO[].class);
-            Assert.assertEquals(342239, csvStateCensuses[28].areaInSqKm, 0);
+            Assert.assertEquals("Rajasthan", csvStateCensuses[0].state);
         } catch (MyCensusException e) {
             e.getStackTrace();
         }
@@ -260,7 +262,7 @@ public class CensusAnalyserProblemTest {
             censusAnalyserProblem.loadCensusData(US_CENSUS_DATA_PATH);
             String sortedCensusData = censusAnalyserProblem.getSortCensusData(StateCensusAnalyser.SORTING_MODE.POPULATION);
             CensusDAO[] censusCSV = new Gson().fromJson(sortedCensusData, CensusDAO[].class);
-            Assert.assertEquals("California", censusCSV[50].state);
+            Assert.assertEquals("California", censusCSV[0].state);
         } catch (MyCensusException e) {
             e.getStackTrace();
         }
@@ -273,7 +275,7 @@ public class CensusAnalyserProblemTest {
             censusAnalyserProblem.loadCensusData(US_CENSUS_DATA_PATH);
             String sortedCensusData = censusAnalyserProblem.getSortCensusData(StateCensusAnalyser.SORTING_MODE.DENSITY);
             CensusDAO[] censusCSV = new Gson().fromJson(sortedCensusData, CensusDAO[].class);
-            Assert.assertEquals("District of Columbia", censusCSV[50].state);
+            Assert.assertEquals("District of Columbia", censusCSV[0].state);
         } catch (MyCensusException e) {
             e.getStackTrace();
         }
@@ -286,9 +288,26 @@ public class CensusAnalyserProblemTest {
             censusAnalyserProblem.loadCensusData(US_CENSUS_DATA_PATH);
             String sortedCensusData = censusAnalyserProblem.getSortCensusData(StateCensusAnalyser.SORTING_MODE.AREA);
             CensusDAO[] censusCSV = new Gson().fromJson(sortedCensusData, CensusDAO[].class);
-            Assert.assertEquals("Alaska", censusCSV[50].state);
+            Assert.assertEquals("Alaska", censusCSV[0].state);
         } catch (MyCensusException e) {
             e.getStackTrace();
+        }
+    }
+
+    @Test
+    public void givenUSAndIndiaStateCensusData_WhenSortedPopulationAndDensity_ShouldReturnSortedList_2() throws MyCensusException {
+        try {
+            StateCensusAnalyser usCensusAnalyserProblem = new StateCensusAnalyser(StateCensusAnalyser.COUNTRY.US);
+            usCensusAnalyserProblem.loadCensusData(US_CENSUS_DATA_PATH);
+            String sortedUSCensusData = usCensusAnalyserProblem.getSortCensusData(StateCensusAnalyser.SORTING_MODE.POPULATION);
+            CensusDAO[] UScensusCSV = new Gson().fromJson(sortedUSCensusData, CensusDAO[].class);
+            StateCensusAnalyser censusAnalyserProblem = new StateCensusAnalyser(StateCensusAnalyser.COUNTRY.INDIA);
+            censusAnalyserProblem.loadCensusData(STATE_CENSUS_DATA_PATH);
+            String sortedCensusData = censusAnalyserProblem.getSortCensusData(StateCensusAnalyser.SORTING_MODE.POPULATION);
+            CensusDAO[] censusCSV = new Gson().fromJson(sortedCensusData, CensusDAO[].class);
+            Assert.assertEquals(true, (String.valueOf(censusCSV[0].densityPerSqKm)).compareToIgnoreCase(String.valueOf(UScensusCSV[0].densityPerSqKm)) < 0);
+        } catch (MyCensusException e) {
+            e.printStackTrace();
         }
     }
 }
